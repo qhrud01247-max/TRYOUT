@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRYOUT · 소개 카드</title>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;700&family=Bebas+Neue&family=Anton&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #1B2A4A;
+  --navy-dark: #0f1a2e;
+  --navy-mid: #1e3260;
+  --pink: #F0406A;
+  --pink-light: #ff6b8a;
+  --cream: #f5f0e8;
+  --bg: #e8e0d4;
+  --panel: #f5f0e8;
+  --border: rgba(27,42,74,0.12);
+  --text: #1B2A4A;
+  --muted: #8a7f72;
+}
+
+body {
+  background: #ddd6c8;
+  color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 14px 60px;
+  gap: 24px;
+}
+
+/* ── HEADER ── */
+.header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.logo-tryout {
+  font-family: 'Anton', sans-serif;
+  font-size: 48px;
+  letter-spacing: 6px;
+  color: #1B2A4A;
+  -webkit-text-stroke: 2px var(--pink);
+  line-height: 1;
+  position: relative;
+}
+.logo-tryout span { color: var(--pink); -webkit-text-stroke: 0; }
+.logo-sub {
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: #8a7f72;
+  text-transform: uppercase;
+}
+
+/* ── CARD ── */
+.card {
+  width: 300px;
+  height: 560px;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+  box-shadow:
+    0 0 0 1.5px rgba(27,42,74,0.15),
+    4px 4px 0 rgba(27,42,74,0.08),
+    0 16px 40px rgba(27,42,74,0.25);
+}
+
+/* jersey texture lines */
+.card-jersey-lines {
+  position: absolute;
+  inset: 0;
+  background: none;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* top stripe — like a jersey collar */
+.card-stripe {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 8px;
+  z-index: 6;
+  display: flex;
+}
+.card-stripe-left  { flex: 1; background: var(--pink); }
+.card-stripe-right { flex: 1; background: var(--navy-mid); }
+
+/* program tag */
+.card-tag {
+  position: absolute;
+  top: 16px; left: 0;
+  z-index: 6;
+  background: var(--pink);
+  padding: 4px 14px 4px 12px;
+  clip-path: polygon(0 0, 100% 0, 92% 100%, 0 100%);
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: #fff;
+}
+
+/* number badge */
+.card-number-badge {
+  position: absolute;
+  top: 12px; right: 14px;
+  z-index: 6;
+  font-family: 'Anton', sans-serif;
+  font-size: 48px;
+  line-height: 1;
+  color: rgba(27,42,74,0.07);
+  letter-spacing: -2px;
+}
+
+/* photo */
+.photo-area {
+  width: 100%;
+  height: 65%;
+  position: relative;
+  overflow: hidden;
+}
+.photo-area img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+.gradient-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.photo-empty {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.photo-empty svg { opacity: 0.25; stroke: #1B2A4A; }
+.photo-empty span { font-size: 10px; color: var(--muted); letter-spacing: 2px; }
+
+/* diagonal cut */
+.card-cut {
+  display: none;
+}
+
+/* info area */
+.card-info {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 38%;
+  padding: 2px 16px 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0px;
+  z-index: 5;
+}
+
+.card-position {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--pink);
+  opacity: 0.9;
+}
+
+.card-name {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 34px;
+  letter-spacing: 1px;
+  line-height: 1;
+  color: #1B2A4A;
+  text-shadow: 0 1px 4px rgba(245,240,232,0.8);
+}
+.card-age-job {
+  font-size: 11px;
+  color: #1B2A4A;
+  letter-spacing: 2px;
+  margin-top: 1px; opacity: 0.6;
+}
+
+/* divider */
+.card-divider {
+  height: 1px;
+  background: linear-gradient(90deg, var(--pink) 0%, rgba(27,42,74,0.15) 70%, transparent 100%);
+  margin: 3px 0;
+}
+
+/* stats */
+.card-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 12px;
+}
+.stat-row { display: flex; align-items: center; gap: 5px; }
+.stat-lbl {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 8px; letter-spacing: 1.5px;
+  color: #1B2A4A;
+  width: 30px; flex-shrink: 0;
+}
+.stat-bg {
+  flex: 1; height: 3px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px; overflow: hidden;
+}
+.stat-fill {
+  height: 100%; border-radius: 2px;
+  transition: width 0.35s ease;
+}
+.stat-num {
+  font-family: 'Anton', sans-serif;
+  font-size: 10px;
+  color: rgba(255,255,255,0.6);
+  width: 18px; text-align: right; flex-shrink: 0;
+}
+
+/* bottom corner logo */
+.card-logo {
+  position: absolute;
+  bottom: 12px; right: 14px;
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 9px; letter-spacing: 3px;
+  color: rgba(27,42,74,0.12);
+  z-index: 6;
+}
+
+/* shine */
+.card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(130deg, rgba(255,255,255,0.35) 0%, transparent 55%);
+  z-index: 9;
+  pointer-events: none;
+}
+
+/* ── PANEL ── */
+.panel {
+  width: 100%;
+  max-width: 400px;
+  background: #faf7f2;
+  border: 1px solid rgba(27,42,74,0.1);
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(27,42,74,0.1);
+  padding: 22px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sec-title {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 11px; letter-spacing: 4px;
+  color: var(--muted); text-transform: uppercase;
+  padding-bottom: 8px; border-bottom: 1px solid rgba(27,42,74,0.1);
+  margin-bottom: 4px;
+}
+
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label { font-size: 11px; color: rgba(27,42,74,0.5); }
+input[type=text], input[type=number] {
+  background: #fff;
+  border: 1px solid rgba(27,42,74,0.15); border-radius: 8px;
+  color: var(--text); font-family: 'Noto Sans KR', sans-serif;
+  font-size: 15px; padding: 10px 12px; outline: none; width: 100%;
+  -webkit-appearance: none;
+}
+input[type=text]:focus, input[type=number]:focus { border-color: var(--pink); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* color fields */
+.color-field { display: flex; align-items: center; gap: 8px; }
+.color-field label { font-size: 11px; color: rgba(27,42,74,0.5); width: 58px; flex-shrink: 0; margin: 0; }
+input[type=color] {
+  width: 36px; height: 34px;
+  border: 1px solid rgba(27,42,74,0.15); border-radius: 6px;
+  padding: 2px; background: #fff;
+  cursor: pointer; flex-shrink: 0; -webkit-appearance: none;
+}
+.hex-inp {
+  flex: 1; background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border); border-radius: 6px;
+  color: var(--text); font-family: 'Courier New', monospace;
+  font-size: 13px; padding: 8px 10px; outline: none; -webkit-appearance: none;
+}
+.hex-inp:focus { border-color: var(--pink); }
+.col-dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid rgba(27,42,74,0.15); flex-shrink: 0; }
+
+/* photo upload */
+.upload-label {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 18px;
+  background: rgba(27,42,74,0.03);
+  border: 1.5px dashed rgba(27,42,74,0.2);
+  border-radius: 12px; cursor: pointer;
+  font-size: 14px; color: rgba(27,42,74,0.45);
+  letter-spacing: 1px; text-align: center;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 64px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.upload-label:active { border-color: var(--pink); background: rgba(240,64,106,0.07); }
+.upload-label.loaded { border-color: rgba(27,42,74,0.25); background: rgba(27,42,74,0.04); }
+.thumb-row { display: flex; align-items: center; gap: 10px; width: 100%; }
+.photo-thumb { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+.thumb-text { flex: 1; font-size: 12px; color: rgba(27,42,74,0.55); }
+.btn-remove {
+  background: rgba(240,64,106,0.2); border: none; border-radius: 6px;
+  color: var(--pink); font-size: 12px; padding: 5px 10px; cursor: pointer; flex-shrink: 0;
+}
+
+/* stat box selectors */
+.stat-ctrl-row { display: flex; align-items: center; gap: 10px; }
+.stat-ctrl-label {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 11px; letter-spacing: 1px;
+  color: rgba(27,42,74,0.55); width: 50px; flex-shrink: 0;
+}
+.stat-boxes { display: flex; gap: 5px; }
+.stat-box {
+  width: 34px; height: 34px;
+  border: 1.5px solid rgba(27,42,74,0.2);
+  border-radius: 7px;
+  cursor: pointer;
+  background: rgba(27,42,74,0.04);
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.12s, border-color 0.12s, transform 0.1s;
+}
+.stat-box.on {
+  background: var(--pink);
+  border-color: var(--pink);
+  box-shadow: 0 0 8px rgba(240,64,106,0.5);
+}
+.stat-box:active { transform: scale(0.9); }
+
+.btn-dl {
+  width: 100%; padding: 15px;
+  background: linear-gradient(90deg, var(--pink), #d42d5a);
+  border: none; border-radius: 12px; color: #fff;
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 15px; letter-spacing: 4px; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 4px 20px rgba(240,64,106,0.35);
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo-tryout">TRY<span>♡</span>UT</div>
+  <div class="logo-sub">너와의 첫 매치를 시작합니다 · Profile Card</div>
+</div>
+
+<!-- CARD -->
+<div class="card" id="card">
+  <div class="card-jersey-lines"></div>
+  <div class="card-stripe">
+    <div class="card-stripe-left" id="stripeLeft"></div>
+    <div class="card-stripe-right" id="stripeRight"></div>
+  </div>
+  <div class="card-tag" id="cardTag">TRYOUT</div>
+  <div class="card-number-badge" id="cardBadge">01</div>
+
+  <div class="photo-area" id="photoArea">
+    <div class="photo-empty">
+      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#1B2A4A" stroke-width="1.2">
+        <rect x="3" y="3" width="18" height="18" rx="3"/>
+        <circle cx="12" cy="10" r="3"/>
+        <path d="M3 20c0-3 3-5 9-5s9 2 9 5"/>
+      </svg>
+      <span>사진을 넣어보세요</span>
+    </div>
+  </div>
+
+  <div class="card-cut" id="cardCut"></div>
+
+  <div class="gradient-overlay" id="gradientOverlay" style="position:absolute;inset:0;z-index:3;pointer-events:none;"></div>
+  <div class="card-info">
+    <div style="display:flex;flex-direction:column;justify-content:flex-end;">
+      <div class="card-position" id="cPos">NO. 01 · TRYOUT 2026</div>
+      <div style="height:12px;"></div>
+      <div class="card-name" id="cName">김지우</div>
+      <div class="card-age-job" id="cSub">24세 · 인테리어 디자이너</div>
+      <div style="height:20px;"></div>
+    </div>
+    <div class="card-divider"></div>
+    <div style="display:flex;flex-direction:column;justify-content:flex-start;">
+      <div style="height:12px;"></div>
+      <div class="card-stats" id="cStats"></div>
+    </div>
+  </div>
+
+  <div class="card-logo" id="cLogo">TRYOUT</div>
+</div>
+
+<!-- PANEL -->
+<div class="panel">
+
+  <div>
+    <div class="sec-title">기본 정보</div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px;">
+      <div class="field">
+        <label>이름</label>
+        <input type="text" id="iName" value="김지우" oninput="sync()">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>나이</label>
+          <input type="number" id="iAge" value="24" min="18" max="60" oninput="sync()">
+        </div>
+        <div class="field">
+          <label>직업</label>
+          <input type="text" id="iJob" value="인테리어 디자이너" oninput="sync()">
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>등번호</label>
+          <input type="text" id="iNum" value="01" oninput="sync()">
+        </div>
+        <div class="field">
+          <label>프로그램명</label>
+          <input type="text" id="iShow" value="TRYOUT 2026" oninput="sync()">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="sec-title">카드 색상</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+      <div class="color-field">
+        <label>메인</label>
+        <input type="color" id="c1p" value="#F0406A" oninput="pickerChange('c1',this.value)">
+        <input type="text" class="hex-inp" id="c1h" value="#F0406A" oninput="hexChange('c1',this.value)" maxlength="7" placeholder="#F0406A">
+        <div class="col-dot" id="c1d" style="background:#F0406A"></div>
+      </div>
+      <div class="color-field">
+        <label>포인트</label>
+        <input type="color" id="c2p" value="#1B2A4A" oninput="pickerChange('c2',this.value)">
+        <input type="text" class="hex-inp" id="c2h" value="#1B2A4A" oninput="hexChange('c2',this.value)" maxlength="7" placeholder="#1B2A4A">
+        <div class="col-dot" id="c2d" style="background:#1B2A4A"></div>
+      </div>
+      <div class="color-field">
+        <label>배경</label>
+        <input type="color" id="cbp" value="#f5f0e8" oninput="pickerChange('cb',this.value)">
+        <input type="text" class="hex-inp" id="cbh" value="#f5f0e8" oninput="hexChange('cb',this.value)" maxlength="7" placeholder="#f5f0e8">
+        <div class="col-dot" id="cbd" style="background:#f5f0e8"></div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="sec-title">사진</div>
+    <div style="margin-top:10px;">
+      <label class="upload-label" id="uploadLabel" for="fileInput">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        <span>탭하여 사진 선택</span>
+      </label>
+      <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="onFileChange(this)">
+    </div>
+  </div>
+
+  <div>
+    <div class="sec-title">스탯</div>
+    <div id="statWrap" style="display:flex;flex-direction:column;gap:9px;margin-top:10px;"></div>
+  </div>
+
+  <button class="btn-dl" onclick="download()">⬇ 카드 저장</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+var col = { c1:'#F0406A', c2:'#1B2A4A', cb:'#f5f0e8' };
+var photoUrl = null;
+
+var STATS = [
+  {key:'body',  lbl:'신체', val:3},
+  {key:'agil',  lbl:'민첩', val:4},
+  {key:'focus', lbl:'집중', val:3},
+  {key:'skill', lbl:'기술', val:5},
+  {key:'luck',  lbl:'행운', val:2},
+];
+
+/* box selectors */
+var wrap = document.getElementById('statWrap');
+STATS.forEach(function(s,i){
+  var d = document.createElement('div');
+  d.className = 'stat-ctrl-row';
+  var boxes = '';
+  for(var n=1;n<=5;n++){
+    boxes += '<div class="stat-box'+(n<=s.val?' on':'')+'" onclick="setStat('+i+','+n+')" id="box_'+s.key+'_'+n+'"></div>';
+  }
+  d.innerHTML = '<span class="stat-ctrl-label">'+s.lbl+'</span><div class="stat-boxes">'+boxes+'</div>';
+  wrap.appendChild(d);
+});
+
+function setStat(i,v){
+  STATS[i].val=parseInt(v);
+  var s=STATS[i];
+  for(var n=1;n<=5;n++){
+    var el=document.getElementById('box_'+s.key+'_'+n);
+    if(el){ el.className='stat-box'+(n<=v?' on':''); }
+  }
+  renderStats();
+}
+
+/* color */
+function validHex(h){ return /^#[0-9A-Fa-f]{6}$/.test(h); }
+
+function pickerChange(k,v){
+  col[k]=v;
+  document.getElementById(k+'h').value=v;
+  document.getElementById(k+'d').style.background=v;
+  sync();
+}
+function hexChange(k,raw){
+  var v=raw.trim();
+  if(v&&v[0]!=='#') v='#'+v;
+  if(validHex(v)){
+    col[k]=v;
+    document.getElementById(k+'p').value=v;
+    document.getElementById(k+'d').style.background=v;
+    sync();
+  }
+}
+
+/* photo */
+function onFileChange(input){
+  var file=input.files&&input.files[0];
+  if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(e){ photoUrl=e.target.result; setPhoto(); };
+  reader.readAsDataURL(file);
+}
+function setPhoto(){
+  var area=document.getElementById('photoArea');
+  area.innerHTML='';
+  var img=document.createElement('img');
+  img.src=photoUrl;
+  area.appendChild(img);
+
+  var lbl=document.getElementById('uploadLabel');
+  lbl.classList.add('loaded');
+  lbl.innerHTML=
+    '<div class="thumb-row">'+
+      '<img class="photo-thumb" src="'+photoUrl+'">'+
+      '<span class="thumb-text">사진 변경하려면 탭</span>'+
+      '<button class="btn-remove" onclick="clearPhoto(event)">제거</button>'+
+    '</div>';
+}
+function clearPhoto(e){
+  e.preventDefault();
+  photoUrl=null;
+  document.getElementById('fileInput').value='';
+  document.getElementById('photoArea').innerHTML=
+    '<div class="photo-empty">'+
+      '<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#1B2A4A" stroke-width="1.2">'+
+        '<rect x="3" y="3" width="18" height="18" rx="3"/>'+
+        '<circle cx="12" cy="10" r="3"/>'+
+        '<path d="M3 20c0-3 3-5 9-5s9 2 9 5"/>'+
+      '</svg>'+
+      '<span>사진을 넣어보세요</span>'+
+    '</div>';
+  var lbl=document.getElementById('uploadLabel');
+  lbl.classList.remove('loaded');
+  lbl.innerHTML=
+    '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">'+
+      '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>'+
+      '<polyline points="17 8 12 3 7 8"/>'+
+      '<line x1="12" y1="3" x2="12" y2="15"/>'+
+    '</svg>'+
+    '<span>탭하여 사진 선택</span>';
+}
+
+/* sync */
+function sync(){
+  var name=document.getElementById('iName').value||'이름';
+  var age=document.getElementById('iAge').value;
+  var job=document.getElementById('iJob').value;
+  var num=document.getElementById('iNum').value;
+  var show=document.getElementById('iShow').value;
+  var c1=col.c1, c2=col.c2, cb=col.cb;
+
+  var numStr=String(num).length<2?'0'+num:num;
+
+  document.getElementById('card').style.background='transparent';
+  document.getElementById('stripeLeft').style.background=c1;
+  document.getElementById('stripeRight').style.background=c2;
+  document.getElementById('cardCut').style.background=cb;
+  document.getElementById('cardTag').textContent=show;
+  document.getElementById('cardBadge').textContent=numStr;
+
+  document.getElementById('cName').textContent=name;
+  document.getElementById('cSub').textContent=age+'세 · '+job;
+  document.getElementById('cPos').textContent='NO. '+numStr+' · '+show;
+  document.getElementById('cPos').style.color=c1;
+  document.getElementById('cLogo').textContent=show;
+
+  // 그라데이션 배경색 동기화
+  var r=parseInt(cb.slice(1,3),16), g=parseInt(cb.slice(3,5),16), b=parseInt(cb.slice(5,7),16);
+  function rgba(a){ return 'rgba('+r+','+g+','+b+','+a+')'; }
+  // photo 위 오버레이: 사진 → 배경색으로 페이드
+  document.getElementById('gradientOverlay').style.background =
+    'linear-gradient(to bottom,'+
+    rgba(0)+' 0%,'+
+    rgba(0)+' 38%,'+
+    rgba(0.04)+' 48%,'+
+    rgba(0.12)+' 54%,'+
+    rgba(0.28)+' 60%,'+
+    rgba(0.52)+' 67%,'+
+    rgba(0.78)+' 74%,'+
+    rgba(0.95)+' 80%,'+
+    rgba(1)+' 85%,'+
+    rgba(1)+' 100%)';
+  document.getElementById('photoArea').style.background = cb;
+  // 카드 전체 배경: 위는 투명(사진이 보임), 아래는 배경색
+  document.getElementById('card').style.background = cb;
+
+  renderStats();
+}
+
+function renderStats(){
+  var c1=col.c1;
+  var el=document.getElementById('cStats');
+  el.innerHTML='';
+  STATS.forEach(function(s){
+    var stars='';
+    for(var n=1;n<=5;n++){
+      var filled = n<=s.val;
+      stars += '<span style="font-size:12px;color:'+(filled?c1:'rgba(27,42,74,0.2)')+';line-height:1;transition:color 0.2s;">★</span>';
+    }
+    var r=document.createElement('div');
+    r.className='stat-row';
+    r.innerHTML=
+      '<span class="stat-lbl">'+s.lbl+'</span>'+
+      '<span style="flex:1;display:flex;align-items:center;gap:2px;">'+stars+'</span>';
+    el.appendChild(r);
+  });
+}
+
+/* download */
+function download(){
+  var card=document.getElementById('card');
+  html2canvas(card,{
+    scale:3, useCORS:true, allowTaint:true,
+    backgroundColor:null, logging:false
+  }).then(function(canvas){
+    var a=document.createElement('a');
+    a.download='tryout_'+( document.getElementById('iName').value||'card')+'.png';
+    a.href=canvas.toDataURL('image/png');
+    a.click();
+  });
+}
+
+sync();
+</script>
+</body>
+</html>
